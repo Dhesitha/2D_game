@@ -268,3 +268,24 @@ function endGame() {
 function reload() {
     location.reload();
 }
+
+// Touch & Click Support (Mobile/Mouse සඳහා)
+function handleInput(e) {
+    if (e.type === 'touchstart' || e.type === 'click') {
+        // ගේම් එක පටන් අරන් නැත්නම් හෝ මැරිලා නම් පටන් ගන්න
+        if (!game.running && !game.dead) {
+            startGame();
+        } 
+        else if (game.dead) {
+            reload();
+        }
+        // ගේම් එක දුවනවා නම් පනින්න
+        else if (game.running && !game.jumping) {
+            jump();
+        }
+    }
+}
+
+// Screen එක Touch කරනකොට හෝ Click කරනකොට වැඩ කරන්න
+window.addEventListener('touchstart', handleInput, {passive: false});
+window.addEventListener('click', handleInput);
