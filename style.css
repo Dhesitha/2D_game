@@ -1,0 +1,126 @@
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+    user-select: none;
+}
+
+.body {
+    margin: 0;
+    padding: 0;
+    overflow: hidden;
+    font-family: Arial, sans-serif;
+    background-color: #333;
+}
+
+.background {
+    width: 100vw;
+    height: 100vh;
+    background-image: url("depositphotos_116929422-stock-illustration-forest-game-background-2d-application.jpg");
+    background-size: cover;
+    background-position: left bottom;
+    position: relative;
+    overflow: hidden;
+}
+
+.player {
+    position: absolute;
+    height: 18vh; 
+    width: auto; 
+    bottom: 13vh; 
+    left: 8vw;
+    z-index: 5;
+}
+
+.score {
+    position: absolute;
+    font-size: clamp(30px, 5vw, 60px);
+    font-weight: bold;
+    top: 20px;
+    left: 30px;
+    color: #fff;
+    text-shadow: 2px 2px 0px #000;
+    z-index: 10;
+}
+
+/* High Score Style */
+.high-score-display {
+    position: absolute;
+    font-size: clamp(20px, 3vw, 40px);
+    font-weight: bold;
+    top: 20px;
+    right: 30px; /* දකුණු පැත්තේ පෙන්වයි */
+    color: #ffd700; /* රත්රන් පාට */
+    text-shadow: 2px 2px 0px #000;
+    z-index: 10;
+}
+
+.instructions {
+    position: absolute;
+    top: 40%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    font-size: clamp(18px, 3vw, 36px);
+    font-weight: bold;
+    color: #fff;
+    text-shadow: 2px 2px 4px rgba(0,0,0,0.8);
+    text-align: center;
+    background: rgba(0,0,0,0.6);
+    padding: 20px;
+    border-radius: 15px;
+    z-index: 15;
+}
+
+.block {
+    width: auto;
+    height: 10vh;
+    aspect-ratio: 1/2; 
+    background-image: url("flame.gif");
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-position: center bottom;
+    position: absolute;
+    bottom: 13vh;
+}
+
+.endscreen {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 80vw;
+    max-width: 400px;
+    padding: 30px;
+    background: white;
+    border-radius: 20px;
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    visibility: hidden;
+    z-index: 100;
+    box-shadow: 0 10px 25px rgba(0,0,0,0.5);
+    font-family: Arial, sans-serif;
+    font-weight: bold;
+}
+
+.endScore {
+    color: red;
+    font-size: 40px;
+}
+
+.btn {
+    padding: 15px;
+    font-size: 20px;
+    font-weight: bold;
+    color: white;
+    background-color: #ff4444;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    margin-top: 10px;
+}
+
+.btn:hover {
+    background-color: #cc0000;
+}

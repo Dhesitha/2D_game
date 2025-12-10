@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>White Iron Man Runner</title>
+    <link rel="stylesheet" href="style.css" />
+</head>
+<body class="body">
+    
+    <div class="background" id="background">
+        <div class="score" id="score">0</div>
+        
+        <div class="high-score-display">
+            Best: <span id="highScore">0</span>
+        </div>
+
+        <div class="instructions" id="instructions">
+            Press <strong>ENTER</strong> to Start<br>
+            Press <strong>SPACE</strong> to Jump
+        </div>
+        
+        <img src="Run (1).png" class="player" id="player" alt="Player" />
+    </div>
+
+    <div class="endscreen" id="endscreen">
+        <div style="font-size: 24px;">Game Over!</div>
+        
+        <div>Your Score</div>
+        <div class="endScore" id="endScore">0</div>
+        
+        <div style="font-size: 18px; margin-top: 10px; color: #555;">
+            High Score: <span id="finalHighScore">0</span>
+        </div>
+
+        <button class="btn" onclick="reload();">Play Again</button>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
