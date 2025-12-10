@@ -1,5 +1,28 @@
 // Game Elements
 var player = document.getElementById("player");
+
+// Image Preloader (මේක අලුතෙන් දාන්න)
+function preloadImages() {
+    var imageList = [];
+    for (var i = 1; i <= 10; i++) { // ඔයාගේ පින්තූර 10ක් තියෙනවා කියලා හිතලයි 10 දැම්මේ
+        var imgRun = new Image();
+        imgRun.src = `Run (${i}).png`;
+        imageList.push(imgRun);
+        
+        var imgJump = new Image();
+        imgJump.src = `Jump (${i}).png`;
+        imageList.push(imgJump);
+
+        var imgDead = new Image();
+        imgDead.src = `Dead (${i}).png`;
+        imageList.push(imgDead);
+    }
+    console.log("Images preloaded!");
+}
+
+// ගේම් එක Load වෙනකොටම පින්තූර ටික ගන්න
+preloadImages();
+
 var background = document.getElementById("background");
 var scoreElement = document.getElementById("score");
 var highScoreElement = document.getElementById("highScore"); // අලුත්
@@ -220,14 +243,29 @@ var animationCounter = 0;
 function updateAnimation() {
     animationCounter++;
     
+    // Jump එක
     if (game.jumping) {
-        if (animationCounter % 8 === 0) {
+        if (animationCounter % 10 === 0) { // මෙතන 10 කළා
              game.animationFrame++;
              if (game.animationFrame > 10) game.animationFrame = 1;
              player.src = `Jump (${game.animationFrame}).png`;
         }
         return;
     }
+
+    // Run එක
+    if (animationCounter % 8 === 0) { // මෙතන 5 වෙනුවට 8 හෝ 10 දාලා බලන්න
+        if (game.running) {
+            game.animationFrame++;
+            if (game.animationFrame > 10) game.animationFrame = 1;
+            
+            // Debugging සඳහා (මේක Console එකේ වැටෙයි)
+            console.log("Changing to: Run (" + game.animationFrame + ").png");
+            
+            player.src = `Run (${game.animationFrame}).png`;
+        }
+    }
+}
 
     if (animationCounter % 5 === 0) { 
         if (game.dead) {
