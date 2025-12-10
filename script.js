@@ -1,32 +1,9 @@
 // Game Elements
 var player = document.getElementById("player");
-
-// Image Preloader (මේක අලුතෙන් දාන්න)
-function preloadImages() {
-    var imageList = [];
-    for (var i = 1; i <= 10; i++) {
-        var imgRun = new Image();
-        imgRun.src = `Run${i}.png`; // Space නෑ
-        imageList.push(imgRun);
-        
-        var imgJump = new Image();
-        imgJump.src = `Jump${i}.png`; // Space නෑ
-        imageList.push(imgJump);
-
-        var imgDead = new Image();
-        imgDead.src = `Dead (${i}).png`;
-        imageList.push(imgDead);
-    }
-    console.log("Images preloaded!");
-}
-
-// ගේම් එක Load වෙනකොටම පින්තූර ටික ගන්න
-preloadImages();
-
 var background = document.getElementById("background");
 var scoreElement = document.getElementById("score");
-var highScoreElement = document.getElementById("highScore"); // අලුත්
-var finalHighScoreElement = document.getElementById("finalHighScore"); // අලුත්
+var highScoreElement = document.getElementById("highScore");
+var finalHighScoreElement = document.getElementById("finalHighScore");
 var instructions = document.getElementById("instructions");
 var endscreen = document.getElementById("endscreen");
 var endScore = document.getElementById("endScore");
@@ -36,7 +13,7 @@ var runSound = new Audio("run.mp3"); runSound.loop = true;
 var jumpSound = new Audio("jump.mp3");
 var deadSound = new Audio("dead.mp3");
 
-// High Score Variable (localStorage වලින් ගන්නවා)
+// High Score Variable
 var highScore = localStorage.getItem("gameHighScore") || 0;
 highScoreElement.textContent = highScore;
 
@@ -62,7 +39,30 @@ var settings = {
     blockSpeed: 0
 };
 
-// 1. Responsive Physics
+// --- 1. Image Preloader (Corrected) ---
+function preloadImages() {
+    var imageList = [];
+    for (var i = 1; i <= 10; i++) {
+        // Run Images
+        var imgRun = new Image();
+        imgRun.src = `Run${i}.png`; // Run1.png ...
+        imageList.push(imgRun);
+        
+        // Jump Images
+        var imgJump = new Image();
+        imgJump.src = `Jump${i}.png`; // Jump1.png ...
+        imageList.push(imgJump);
+
+        // Dead Images (Corrected)
+        var imgDead = new Image();
+        imgDead.src = `Dead${i}.png`; // Dead1.png ...
+        imageList.push(imgDead);
+    }
+    console.log("All images preloaded with new names!");
+}
+preloadImages(); // Start preloading immediately
+
+// --- 2. Responsive Physics ---
 function setGameConstants() {
     var h = window.innerHeight;
     var w = window.innerWidth;
@@ -76,7 +76,7 @@ function setGameConstants() {
 window.addEventListener('resize', setGameConstants);
 setGameConstants();
 
-// 2. Key Inputs
+// --- 3. Key Inputs ---
 window.addEventListener('keydown', function(event) {
     if (event.key === "Enter") {
         if (!game.running && !game.dead) startGame();
@@ -87,7 +87,7 @@ window.addEventListener('keydown', function(event) {
     }
 });
 
-// 3. Start Game
+// --- 4. Start Game ---
 function startGame() {
     game.running = true;
     game.dead = false;
@@ -97,14 +97,17 @@ function startGame() {
     game.velocity = 0;
     game.blocks = [];
     game.blockId = 1;
+    game.animationFrame = 1;
 
     scoreElement.textContent = "0";
-    // පරණ High Score එක පෙන්වන්න
     highScoreElement.textContent = highScore; 
     
     instructions.style.display = "none";
     endscreen.style.visibility = "hidden";
+    
+    // Reset Player Position and Image (New Name)
     player.style.transform = "translateY(0px)";
+    player.src = "Run1.png"; 
 
     document.querySelectorAll('.block').forEach(b => b.remove());
 
@@ -116,19 +119,21 @@ function startGame() {
     setTimeout(createBlock, 2000);
 }
 
-// 4. Jump
+// --- 5. Jump ---
 function jump() {
     if (game.jumping) return;
     
     game.jumping = true;
     game.velocity = settings.jumpPower;
-    player.src = "Jump (1).png";
+    
+    // Jump Image (New Name)
+    player.src = "Jump1.png"; 
     
     runSound.pause();
     jumpSound.play().catch(e => {});
 }
 
-// 5. Create Block
+// --- 6. Create Block ---
 function createBlock() {
     if (!game.running || game.dead) return;
 
@@ -147,7 +152,7 @@ function createBlock() {
     setTimeout(createBlock, delay);
 }
 
-// 6. Main Loop
+// --- 7. Main Loop ---
 function gameLoop(currentTime) {
     if (!game.running && !game.dead) return;
 
@@ -169,7 +174,7 @@ function gameLoop(currentTime) {
     }
 }
 
-// 7. Updates
+// --- 8. Updates ---
 function updatePhysics() {
     if (game.jumping || game.playerHeight > 0) {
         game.playerHeight += game.velocity;
@@ -182,7 +187,8 @@ function updatePhysics() {
             
             if (game.running) {
                 runSound.play().catch(e => {});
-                player.src = "Run (1).png";
+                // Reset to Run Image (New Name)
+                player.src = "Run1.png";
             }
         }
         
@@ -213,11 +219,9 @@ function updateScore() {
     var currentScore = Math.floor(game.score);
     scoreElement.textContent = currentScore;
     
-    // ගේම් එක යන අතරතුර High Score එක කැඩුවොත් ඒ වෙලාවෙම අප්ඩේට් කරන්න
     if (currentScore > highScore) {
         highScore = currentScore;
         highScoreElement.textContent = highScore;
-        // අලුත් High Score එක LocalStorage එකට දාන්න
         localStorage.setItem("gameHighScore", highScore);
     }
 }
@@ -238,7 +242,7 @@ function checkCollisions() {
     });
 }
 
-// 8. Animation
+// --- 9. Animation (Cleaned Up) ---
 var animationCounter = 0;
 function updateAnimation() {
     animationCounter++;
@@ -248,40 +252,33 @@ function updateAnimation() {
         if (animationCounter % 10 === 0) {
              game.animationFrame++;
              if (game.animationFrame > 10) game.animationFrame = 1;
-             
-             // Space සහ වරහන් අයින් කළා
              player.src = `Jump${game.animationFrame}.png`; 
         }
         return;
     }
 
+    // Dead Animation
+    if (game.dead) {
+        if (animationCounter % 10 === 0) {
+            if (game.animationFrame < 10) {
+                game.animationFrame++;
+                player.src = `Dead${game.animationFrame}.png`;
+            } else {
+                endGame();
+            }
+        }
+        return;
+    }
+
     // Run Animation
-    if (animationCounter % 8 === 0) { 
-        if (game.running) {
+    if (game.running) {
+        if (animationCounter % 8 === 0) { 
             game.animationFrame++;
             if (game.animationFrame > 10) game.animationFrame = 1;
-            
-            // Space සහ වරහන් අයින් කළා
             player.src = `Run${game.animationFrame}.png`;
         }
     }
 }
-
-    if (animationCounter % 5 === 0) { 
-        if (game.dead) {
-             if (game.animationFrame < 10) {
-                 game.animationFrame++;
-                 player.src = `Dead (${game.animationFrame}).png`;
-             } else {
-                 endGame();
-             }
-        } else if (game.running) {
-            game.animationFrame++;
-            if (game.animationFrame > 10) game.animationFrame = 1;
-            player.src = `Run (${game.animationFrame}).png`;
-        }
-    }
-
 
 function gameOver() {
     if(game.dead) return;
@@ -289,6 +286,7 @@ function gameOver() {
     game.dead = true;
     game.animationFrame = 1;
     
+    // Dead sound එක play කරන්න
     runSound.pause();
     deadSound.play().catch(e => {});
 }
@@ -296,10 +294,7 @@ function gameOver() {
 function endGame() {
     var finalScore = Math.floor(game.score);
     endScore.textContent = finalScore;
-    
-    // අවසාන Screen එකේදීත් High Score එක පෙන්වන්න
     finalHighScoreElement.textContent = highScore;
-
     endscreen.style.visibility = "visible";
 }
 
@@ -307,23 +302,20 @@ function reload() {
     location.reload();
 }
 
-// Touch & Click Support (Mobile/Mouse සඳහා)
+// --- 10. Touch & Click Support ---
 function handleInput(e) {
     if (e.type === 'touchstart' || e.type === 'click') {
-        // ගේම් එක පටන් අරන් නැත්නම් හෝ මැරිලා නම් පටන් ගන්න
         if (!game.running && !game.dead) {
             startGame();
         } 
         else if (game.dead) {
             reload();
         }
-        // ගේම් එක දුවනවා නම් පනින්න
         else if (game.running && !game.jumping) {
             jump();
         }
     }
 }
 
-// Screen එක Touch කරනකොට හෝ Click කරනකොට වැඩ කරන්න
 window.addEventListener('touchstart', handleInput, {passive: false});
 window.addEventListener('click', handleInput);
